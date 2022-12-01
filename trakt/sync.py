@@ -288,11 +288,11 @@ def search_by_id(query, id_type='imdb', media_type=None, slugify_query=False):
         if 'episode' in d:
             from trakt.tv import TVEpisode
             show = d.pop('show')
+            extract_ids(show)
             episode = d.pop('episode')
             extract_ids(episode)
-            results.append(TVEpisode(show.get('title', None),
-                                     show_id=show['ids'].get('trakt'),
-                                     **episode))
+            episode = TVEpisode(show['title'], **episode, show_id=show['trakt'])
+            results.append(episode)
         elif 'movie' in d:
             from trakt.movies import Movie
             movie = d.pop('movie')
