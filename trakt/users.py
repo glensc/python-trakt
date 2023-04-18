@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Interfaces to all of the User objects offered by the Trakt.tv API"""
 from collections import namedtuple
+from dataclasses import dataclass
 
 from trakt.core import delete, get, post
 from trakt.mixins import IdsMixin
@@ -62,6 +63,7 @@ def unfollow(user_name):
     yield 'users/{username}/follow'.format(username=slugify(user_name))
 
 
+@dataclass
 class UserList(namedtuple('UserList', ['name', 'description', 'privacy',
                                        'share_link', 'type', 'display_numbers',
                                        'allow_comments', 'sort_by',
