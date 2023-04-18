@@ -14,8 +14,10 @@ class IdsMixin:
 
     __ids = ['imdb', 'slug', 'tmdb', 'trakt']
 
-    def __init__(self):
-        self._ids = {}
+    def __init__(self, ids=None):
+        if ids is None:
+            ids = {}
+        self._ids = ids
 
     @property
     def ids(self):
@@ -51,3 +53,11 @@ class IdsMixin:
     @property
     def tvrage(self):
         return self._ids.get('tvrage', None)
+
+    @property
+    def slug(self):
+        return self._ids.get('slug', None)
+
+    @slug.setter
+    def slug(self, value):
+        self._ids['slug'] = value

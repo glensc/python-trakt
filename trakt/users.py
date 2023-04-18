@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """Interfaces to all of the User objects offered by the Trakt.tv API"""
-from collections import namedtuple
-from dataclasses import dataclass
+from collections import UserDict, namedtuple
+from dataclasses import dataclass, field
+from typing import Optional, Union
 
 from trakt.core import delete, get, post
 from trakt.mixins import IdsMixin
@@ -63,8 +64,8 @@ def unfollow(user_name):
     yield 'users/{username}/follow'.format(username=slugify(user_name))
 
 
-@dataclass
-class UserList(IdsMixin):
+@dataclass(frozen=True)
+class UserListData:
     name: str
     description: str
     privacy: str
@@ -79,25 +80,32 @@ class UserList(IdsMixin):
     item_count: str
     comment_count: str
     likes: str
-    trakt: str
-    slug: str
     user: str
     creator: str
 
+
+def DataClassMixin(data_class):
+    class DataClassMixinClass:
+        def __init__(self, **kwargs):
+            self.data = data_class(**kwargs)
+
+        def __getattr__(self, item):
+            return getattr(self.data, item)
+
+    return DataClassMixinClass
+
+
+class UserList(DataClassMixin(UserListData), IdsMixin):
     """A list created by a Trakt.tv :class:`User`"""
 
-    def __init__(self, *args, ids=None, **kwargs):
-        super().__init__()
+    def __init__(self, ids=None, **kwargs):
+        super().__init__(**kwargs)
         self._ids = ids
-        self._items = list()
+        self._items = []
 
     def __iter__(self):
         """Iterate over the items in this user list"""
         return self._items.__iter__()
-
-    @property
-    def slug(self):
-        return self._ids.get('slug', None)
 
     @classmethod
     @post
