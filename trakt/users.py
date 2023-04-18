@@ -64,13 +64,26 @@ def unfollow(user_name):
 
 
 @dataclass
-class UserList(namedtuple('UserList', ['name', 'description', 'privacy',
-                                       'share_link', 'type', 'display_numbers',
-                                       'allow_comments', 'sort_by',
-                                       'sort_how', 'created_at',
-                                       'updated_at', 'item_count',
-                                       'comment_count', 'likes', 'ids',
-                                       'user', 'creator']), IdsMixin):
+class UserList(IdsMixin):
+    name: str
+    description: str
+    privacy: str
+    share_link: str
+    type: str
+    display_numbers: str
+    allow_comments: str
+    sort_by: str
+    sort_how: str
+    created_at: str
+    updated_at: str
+    item_count: str
+    comment_count: str
+    likes: str
+    trakt: str
+    slug: str
+    user: str
+    creator: str
+
     """A list created by a Trakt.tv :class:`User`"""
 
     def __init__(self, *args, ids=None, **kwargs):
