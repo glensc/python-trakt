@@ -9,7 +9,7 @@ from trakt.core import delete, get, post
 from trakt.utils import slugify, timestamp
 
 __author__ = 'Jon Nappi'
-__all__ = ['Scrobbler', 'comment', 'rate', 'add_to_history', 'get_collection',
+__all__ = ['Scrobbler', 'comment', 'rate', 'get_history', 'add_to_history', 'get_collection',
            'get_watchlist', 'add_to_watchlist', 'remove_from_history',
            'remove_from_watchlist', 'add_to_collection',
            'remove_from_collection', 'search', 'search_by_id', 'checkin_media',
@@ -374,38 +374,22 @@ def get_watchlist(list_type=None, sort=None):
     yield results
 
 
-@deprecated("This method returns watchlist, not watched list. "
-            "This will be fixed in PyTrakt 4.x to return watched list")
+# @deprecated("This method returns watchlist, not watched list. "
+#             "This will be fixed in PyTrakt 4.x to return watched list")
 @get
-def get_watched(list_type=None, extended=None):
-    """Return all movies or shows a user has watched sorted by most plays.
-
-    :param list_type: Optional Filter by a specific type.
-        Possible values: movies, shows, seasons or episodes.
-    :param extended: Optional value for requesting extended information.
+def get_history(media):
     """
-    valid_type = ('movies', 'shows', 'seasons', 'episodes')
+    Retrieve a :class:`Movie`, :class:`TVShow`, or :class:`TVEpisode
+        from your history.
 
-    if list_type and list_type not in valid_type:
-        raise ValueError('list_type must be one of {}'.format(valid_type))
+    :param media: Supports both the PyTrakt :class:`Movie`,
+        :class:`TVShow`, etc. But also supports passing custom json structures.
+    """
 
-    uri = 'sync/watched'
-    if list_type:
-        uri += '/{}'.format(list_type)
+    uri = 'sync/history'
+    uri += f'/{media.media_type}/{media.ids["ids"]["trakt"]}'
 
-    if list_type == 'shows' and extended:
-        uri += '?extended={extended}'.format(extended=extended)
-
-    data = yield uri
-    results = []
-    for d in data:
-        if 'movie' in d:
-            from trakt.movies import Movie
-            results.append(Movie(**d.pop('movie')))
-        elif 'show' in d:
-            from trakt.tv import TVShow
-            results.append(TVShow(**d.pop('show')))
-
+    results = yield uri
     yield results
 
 
