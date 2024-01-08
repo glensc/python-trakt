@@ -40,3 +40,5 @@ nosetests.xml
 
 # Virtual environments
 venv
+*.log
+*.json
