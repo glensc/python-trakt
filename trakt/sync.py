@@ -9,7 +9,7 @@ from trakt.core import delete, get, post
 from trakt.utils import slugify, timestamp
 
 __author__ = 'Jon Nappi'
-__all__ = ['Scrobbler', 'comment', 'rate', 'add_to_history', 'get_collection',
+__all__ = ['Scrobbler', 'comment', 'rate', 'get_history', 'add_to_history', 'get_collection',
            'get_watchlist', 'add_to_watchlist', 'remove_from_history',
            'remove_from_watchlist', 'add_to_collection',
            'remove_from_collection', 'search', 'search_by_id', 'checkin_media',
@@ -406,6 +406,23 @@ def get_watched(list_type=None, extended=None):
             from trakt.tv import TVShow
             results.append(TVShow(**d.pop('show')))
 
+    yield results
+
+
+@get
+def get_history(media):
+    """
+    Retrieve a :class:`Movie`, :class:`TVShow`, or :class:`TVEpisode
+        from your history.
+
+    :param media: Supports both the PyTrakt :class:`Movie`,
+        :class:`TVShow`, etc. But also supports passing custom json structures.
+    """
+
+    uri = 'sync/history'
+    uri += f'/{media.media_type}/{media.trakt}'
+
+    results = yield uri
     yield results
 
 

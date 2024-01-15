@@ -18,7 +18,7 @@ __author__ = 'Jon Nappi'
 __all__ = ['dismiss_recommendation', 'get_recommended_shows', 'genres',
            'popular_shows', 'trending_shows', 'updated_shows',
            'recommended_shows', 'played_shows', 'watched_shows',
-           'collected_shows', 'anticipated_shows', 'TVShow', 'TVEpisode',
+           'collected_shows', 'anticipated_shows', 'studios', 'TVShow', 'TVEpisode',
            'TVSeason', 'Translation']
 
 
@@ -201,6 +201,20 @@ def anticipated_shows(page=1, limit=10, extended=None):
     data = yield uri
     yield [TVShow(**show['show']) for show in data]
 
+@get
+def studios(tvshow):
+    """
+    Check :class:`TVShow`' for published studios
+    as well the title can be passed directly.
+    """
+    if isinstance(tvshow, TVShow):
+        title = tvshow.slug
+    
+    uri = f'shows/{title}/studios'
+
+    data = yield uri
+    yield data
+
 
 class TVShow(IdsMixin):
     """A Class representing a TV Show object."""
@@ -341,7 +355,7 @@ class TVShow(IdsMixin):
         The next_episode will be the next episode the user should collect,
         if there are no upcoming episodes it will be set to null.
         """
-        return self._progress('collection')
+        return self._progress('watched')
 
     @get
     def collection_progress(self, **kwargs):
