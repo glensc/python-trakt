@@ -38,7 +38,7 @@ class WatchlistEntry:
     id: int
     listed_at: str
     notes: Optional[str]
-    type: str
+    type: Literal["movies", "shows"]
 
 
 @dataclass
