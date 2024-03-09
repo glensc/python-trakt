@@ -34,7 +34,7 @@ class Request(namedtuple('Request', ['id', 'requested_at', 'user'])):
 
 @dataclass
 class WatchlistEntry:
-    rank: str
+    rank: int
     id: int
     listed_at: str
     notes: Optional[str]
