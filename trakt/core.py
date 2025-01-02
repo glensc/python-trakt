@@ -237,9 +237,9 @@ def get_device_code(client_id=None, client_secret=None):
                                    json=data, headers=headers, timeout=TIMEOUT).json()
     print('Your user code is: {user_code}, please navigate to '
           '{verification_url} to authenticate'.format(
-        user_code=device_response.get('user_code'),
-        verification_url=device_response.get('verification_url')
-    ))
+            user_code=device_response.get('user_code'),
+            verification_url=device_response.get('verification_url')
+          ))
 
     device_response['requested'] = time.time()
     return device_response
@@ -412,12 +412,12 @@ def _refresh_token(s):
     s.logger.info("OAuth token has expired, refreshing now...")
     url = urljoin(BASE_URL, '/oauth/token')
     data = {
-        'client_id': CLIENT_ID,
-        'client_secret': CLIENT_SECRET,
-        'refresh_token': OAUTH_REFRESH,
-        'redirect_uri': REDIRECT_URI,
-        'grant_type': 'refresh_token'
-    }
+                'client_id': CLIENT_ID,
+                'client_secret': CLIENT_SECRET,
+                'refresh_token': OAUTH_REFRESH,
+                'redirect_uri': REDIRECT_URI,
+                'grant_type': 'refresh_token'
+            }
     response = session.post(url, json=data, headers=HEADERS, timeout=TIMEOUT)
     s.logger.debug('RESPONSE [post] (%s): %s - %s', url, str(response), response.content)
     if response.status_code == 200:
@@ -571,7 +571,6 @@ class Core:
             results
         :return: The results of the generator co-routine
         """
-
         @wraps(f)
         def inner(*args, **kwargs):
             self._bootstrap()
@@ -585,7 +584,6 @@ class Core:
                 return generator.send(json_data)
             except StopIteration:
                 return None
-
         return inner
 
     def delete(self, f):
@@ -593,7 +591,6 @@ class Core:
 
         :param f: Function that returns a uri to delete to
         """
-
         @wraps(f)
         def inner(*args, **kwargs):
             self._bootstrap()
@@ -601,7 +598,6 @@ class Core:
             uri = next(generator)
             url = BASE_URL + uri
             self._handle_request('delete', url)
-
         return inner
 
     def post(self, f):
@@ -614,7 +610,6 @@ class Core:
             results
         :return: The results of the generator co-routine
         """
-
         @wraps(f)
         def inner(*args, **kwargs):
             self._bootstrap()
@@ -624,7 +619,6 @@ class Core:
                 return generator.send(json_data)
             except StopIteration:
                 return None
-
         return inner
 
     def put(self, f):
@@ -637,7 +631,6 @@ class Core:
             results
         :return: The results of the generator co-routine
         """
-
         @wraps(f)
         def inner(*args, **kwargs):
             self._bootstrap()
@@ -647,7 +640,6 @@ class Core:
                 return generator.send(json_data)
             except StopIteration:
                 return None
-
         return inner
 
 
